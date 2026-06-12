@@ -1,0 +1,24 @@
+---
+- hosts: localhost
+  connection: local
+
+  tasks:
+
+    - name: Stop old container
+      shell: docker stop portfolio-container
+      ignore_errors: yes
+
+    - name: Remove old container
+      shell: docker rm portfolio-container
+      ignore_errors: yes
+
+    - name: Run new container
+      shell: docker run -d --name portfolio-container -p 8080:80 portfolio-app
+
+    - name: Verify container is running
+      shell: docker ps
+      register: docker_output
+
+    - name: Display running containers
+      debug:
+        var: docker_output.stdout_lines
